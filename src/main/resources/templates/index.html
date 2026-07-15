@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>E-Commerce Application</title>
+    <title>E-Commerce</title>
 </head>
 <body>
 
-<h1>Welcome to E-Commerce Application</h1>
+<h1>Welcome to E-Commerce Store</h1>
 
-<p>Our Spring Boot project is running successfully.</p>
+<h2>Products</h2>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Stock</th>
+    </tr>
+
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.stock}"></td>
+    </tr>
+
+</table>
 
 </body>
 </html>
