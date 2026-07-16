@@ -16,7 +16,25 @@
         <a class="navbar-brand" href="/products">
             🛒 E-Commerce Store
         </a>
+        <form class="d-flex"
+              th:action="@{/products}"
+              method="get">
 
+            <input
+                    class="form-control me-2"
+                    type="search"
+                    name="keyword"
+                    th:value="${keyword}"
+                    placeholder="Search Product">
+
+            <button
+                    class="btn btn-outline-light">
+
+                Search
+
+            </button>
+
+        </form>
         <a href="/products/new" class="btn btn-success">
             Add Product
         </a>

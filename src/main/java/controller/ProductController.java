@@ -17,8 +17,15 @@ public class ProductController {
     }
 
     @GetMapping
-    public String viewProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String viewProducts(
+            @RequestParam(required = false) String keyword,
+            Model model) {
+
+        model.addAttribute("products",
+                productService.searchProducts(keyword));
+
+        model.addAttribute("keyword", keyword);
+
         return "index";
     }
 

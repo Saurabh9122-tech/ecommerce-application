@@ -30,4 +30,12 @@ public class ProductService {
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+    public List<Product> searchProducts(String keyword) {
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return productRepository.findAll();
+        }
+
+        return productRepository.findByNameContainingIgnoreCase(keyword);
+    }
 }
