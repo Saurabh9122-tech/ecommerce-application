@@ -27,4 +27,8 @@ public class Product {
     private int stock;
 
     private String imageUrl;
+
+    @ManyToOne
+    @JoinColumn(name="category_id")
+    private Category category;
 }
