@@ -26,7 +26,7 @@ public class Product {
     @Min(value = 0, message = "Stock cannot be negative")
     private int stock;
 
-    private String imageUrl;
+    private String imageName;
 
     @ManyToOne
     @JoinColumn(name="category_id")

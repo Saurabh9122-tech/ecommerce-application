@@ -24,11 +24,9 @@
         <div class="card-body">
 
             <form th:action="@{/products/save}"
-
                   th:object="${product}"
-
-                  method="post">
-
+                  method="post"
+                  enctype="multipart/form-data">
                 <input type="hidden"
 
                        th:field="*{id}">
@@ -37,13 +35,12 @@
 
                     <label>Name</label>
 
-                    <input class="form-control"
+                    <input class="form-control" th:field="*{name}">
 
-                           th:field="*{name}">
-
-                </div>
-
-                <div class="mb-3">
+                    <div class="text-danger"
+                         th:if="${#fields.hasErrors('name')}"
+                         th:errors="*{name}">
+                    </div>
 
                     <label>Description</label>
 
@@ -59,13 +56,12 @@
 
                     <label>Price</label>
 
-                    <input type="number"
+                    <input class="form-control" th:field="*{price}">
 
-                           step="0.01"
-
-                           class="form-control"
-
-                           th:field="*{price}">
+                    <div class="text-danger"
+                         th:if="${#fields.hasErrors('price')}"
+                         th:errors="*{price}">
+                    </div>
 
                 </div>
 
@@ -73,21 +69,21 @@
 
                     <label>Stock</label>
 
-                    <input type="number"
+                    <input class="form-control" th:field="*{stock}">
 
-                           class="form-control"
-
-                           th:field="*{stock}">
-
-                </div>
+                    <div class="text-danger"
+                         th:if="${#fields.hasErrors('stock')}"
+                         th:errors="*{stock}">
+                    </div>
 
                 <div class="mb-3">
 
-                    <label>Image URL</label>
+                    <label>Product Image</label>
 
-                    <input class="form-control"
-
-                           th:field="*{imageUrl}">
+                    <input
+                            type="file"
+                            class="form-control"
+                            name="image">
 
                 </div>
 
