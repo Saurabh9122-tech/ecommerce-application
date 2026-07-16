@@ -1,31 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>E-Commerce</title>
+    <title>E-Commerce Store</title>
 </head>
 <body>
 
-<h1>Welcome to E-Commerce Store</h1>
+<h1>Product List</h1>
 
-<h2>Products</h2>
+<a href="/products/new">Add Product</a>
+
+<br><br>
 
 <table border="1">
+
     <tr>
         <th>ID</th>
         <th>Name</th>
         <th>Price</th>
         <th>Stock</th>
+        <th>Action</th>
     </tr>
 
     <tr th:each="product : ${products}">
+
         <td th:text="${product.id}"></td>
         <td th:text="${product.name}"></td>
         <td th:text="${product.price}"></td>
         <td th:text="${product.stock}"></td>
-    </tr>
-    <a href="/products/new">Add Product</a>
 
-    <br><br>
+        <td>
+            <a th:href="@{/products/edit/{id}(id=${product.id})}">
+                Edit
+            </a>
+
+            |
+
+            <a th:href="@{/products/delete/{id}(id=${product.id})}">
+                Delete
+            </a>
+        </td>
+
+    </tr>
+
 </table>
 
 </body>

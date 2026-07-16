@@ -17,13 +17,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public String home(Model model) {
+    public String viewProducts(Model model) {
         model.addAttribute("products", productService.getAllProducts());
         return "index";
     }
 
     @GetMapping("/new")
-    public String showForm(Model model) {
+    public String showAddForm(Model model) {
         model.addAttribute("product", new Product());
         return "product-form";
     }
@@ -31,6 +31,18 @@ public class ProductController {
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute Product product) {
         productService.saveProduct(product);
+        return "redirect:/products";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editProduct(@PathVariable Long id, Model model) {
+        model.addAttribute("product", productService.getProductById(id));
+        return "product-form";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
         return "redirect:/products";
     }
 }

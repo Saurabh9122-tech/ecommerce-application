@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Add Product</title>
 </head>
+
 <body>
 
-<h2>Add New Product</h2>
+<h2>Product Form</h2>
 
 <form th:action="@{/products/save}" th:object="${product}" method="post">
 
-    <label>Product Name</label><br>
+    <input type="hidden" th:field="*{id}">
+
+    <label>Name</label><br>
     <input type="text" th:field="*{name}">
     <br><br>
 
@@ -34,4 +38,5 @@
 </form>
 
 </body>
+
 </html>
