@@ -2,47 +2,87 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>E-Commerce Store</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
-<body>
 
-<h1>Product List</h1>
+<body class="bg-light">
 
-<a href="/products/new">Add Product</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-<br><br>
+    <div class="container">
 
-<table border="1">
+        <a class="navbar-brand" href="/products">
+            🛒 E-Commerce Store
+        </a>
 
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Action</th>
-    </tr>
+        <a href="/products/new" class="btn btn-success">
+            Add Product
+        </a>
 
-    <tr th:each="product : ${products}">
+    </div>
 
-        <td th:text="${product.id}"></td>
-        <td th:text="${product.name}"></td>
-        <td th:text="${product.price}"></td>
-        <td th:text="${product.stock}"></td>
+</nav>
 
-        <td>
-            <a th:href="@{/products/edit/{id}(id=${product.id})}">
-                Edit
-            </a>
+<div class="container mt-5">
 
-            |
+    <div class="row">
 
-            <a th:href="@{/products/delete/{id}(id=${product.id})}">
-                Delete
-            </a>
-        </td>
+        <div class="col-md-4 mb-4"
+             th:each="product : ${products}">
 
-    </tr>
+            <div class="card shadow">
 
-</table>
+                <img th:src="${product.imageUrl}"
+                     class="card-img-top"
+                     style="height:250px; object-fit:cover;">
+
+                <div class="card-body">
+
+                    <h4 th:text="${product.name}"></h4>
+
+                    <p th:text="${product.description}"></p>
+
+                    <h5 class="text-success">
+
+                        ₹ <span th:text="${product.price}"></span>
+
+                    </h5>
+
+                    <p>
+
+                        Stock :
+
+                        <span th:text="${product.stock}"></span>
+
+                    </p>
+
+                    <a class="btn btn-warning"
+
+                       th:href="@{/products/edit/{id}(id=${product.id})}">
+
+                        Edit
+
+                    </a>
+
+                    <a class="btn btn-danger"
+
+                       th:href="@{/products/delete/{id}(id=${product.id})}">
+
+                        Delete
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>
