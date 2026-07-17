@@ -3,6 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import com.saurabh.ecommerce.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,9 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
+    private final CategoryService categoryService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService,
+                             CategoryService categoryService) {
+
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -46,6 +51,8 @@ public class ProductController {
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("product", new Product());
+        model.addAttribute("categories",
+                categoryService.getAllCategories());
         return "product-form";
     }
 
@@ -56,12 +63,13 @@ public class ProductController {
             @RequestParam("image") MultipartFile image,
             Model model) {
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
+
+            model.addAttribute("categories",
+                    categoryService.getAllCategories());
+
             return "product-form";
         }
-
-        // Existing image upload code
-
         productService.saveProduct(product);
 
         return "redirect:/products";
@@ -69,7 +77,13 @@ public class ProductController {
 
     @GetMapping("/edit/{id}")
     public String editProduct(@PathVariable Long id, Model model) {
-        model.addAttribute("product", productService.getProductById(id));
+
+        model.addAttribute("product",
+                productService.getProductById(id));
+
+        model.addAttribute("categories",
+                categoryService.getAllCategories());
+
         return "product-form";
     }
 

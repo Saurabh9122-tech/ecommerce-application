@@ -15,8 +15,19 @@ public class CategoryService {
         this.repository = repository;
     }
 
-    public List<Category> getAllCategories(){
+    public List<Category> getAllCategories() {
         return repository.findAll();
     }
 
+    public void save(Category category) {
+        repository.save(category);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    public Category getById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
 }
