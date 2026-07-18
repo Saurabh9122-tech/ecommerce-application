@@ -33,13 +33,16 @@ public class CartController {
     @GetMapping("/add/{id}")
     public String addToCart(@PathVariable Long id) {
 
+        System.out.println("Product ID = " + id);
+
         Product product = productService.getProductById(id);
+
+        System.out.println("Product = " + product);
 
         cartService.addToCart(product);
 
         return "redirect:/cart";
     }
-
     @GetMapping("/remove/{id}")
     public String removeItem(@PathVariable Long id) {
 

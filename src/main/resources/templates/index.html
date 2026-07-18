@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <title>ShopEase - E-Commerce Store</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -50,10 +49,14 @@
             </a>
 
             <a href="/cart"
-               class="btn btn-warning ms-2">
+               class="btn btn-warning ms-2 position-relative">
 
                 <i class="bi bi-cart-fill"></i>
                 Cart
+
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      th:text="${cartCount}">
+                </span>
 
             </a>
 
@@ -130,9 +133,7 @@
 
                         <span class="badge bg-danger"
                               th:if="${product.stock == 0}">
-
                             Out of Stock
-
                         </span>
 
                     </p>
@@ -161,16 +162,11 @@
 
                         <!-- Add to Cart -->
 
-                        <a href="/cart"
-                           class="btn btn-warning ms-2">
+                        <a th:href="@{/cart/add/{id}(id=${product.id})}"
+                           class="btn btn-success">
 
-                            <i class="bi bi-cart-fill"></i>
-
-                            Cart
-
-                            <span class="badge bg-danger"
-                                  th:text="${cartCount}">
-    </span>
+                            <i class="bi bi-cart-plus-fill"></i>
+                            Add to Cart
 
                         </a>
 
