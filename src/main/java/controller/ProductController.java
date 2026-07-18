@@ -70,19 +70,43 @@ public class ProductController {
 
             return "product-form";
         }
+
+        try {
+
+            if (!image.isEmpty()) {
+
+                String uploadDir = System.getProperty("user.dir") + "/uploads/products/";                Path uploadPath = Paths.get(uploadDir);
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+                Files.copy(
+                        image.getInputStream(),
+                        uploadPath.resolve(fileName),
+                        StandardCopyOption.REPLACE_EXISTING
+                );
+
+                product.setImageName(fileName);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
         productService.saveProduct(product);
 
         return "redirect:/products";
     }
-
     @GetMapping("/edit/{id}")
     public String editProduct(@PathVariable Long id, Model model) {
 
-        model.addAttribute("product",
-                productService.getProductById(id));
+        Product product = productService.getProductById(id);
 
-        model.addAttribute("categories",
-                categoryService.getAllCategories());
+        model.addAttribute("product", product);
+        model.addAttribute("categories", categoryService.getAllCategories());
 
         return "product-form";
     }

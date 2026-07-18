@@ -26,29 +26,38 @@
               th:action="@{/products}"
               method="get">
 
-            <input
-                    class="form-control me-2"
-                    type="search"
-                    name="keyword"
-                    th:value="${keyword}"
-                    placeholder="Search Products...">
+            <input class="form-control me-2"
+                   type="search"
+                   name="keyword"
+                   th:value="${keyword}"
+                   placeholder="Search Products...">
 
-            <button
-                    class="btn btn-outline-light">
+            <button class="btn btn-outline-light">
                 <i class="bi bi-search"></i>
                 Search
             </button>
 
         </form>
 
-        <a href="/products/new"
-           class="btn btn-success">
+        <div>
 
-            <i class="bi bi-plus-circle"></i>
+            <a href="/products/new"
+               class="btn btn-success">
 
-            Add Product
+                <i class="bi bi-plus-circle"></i>
+                Add Product
 
-        </a>
+            </a>
+
+            <a href="/cart"
+               class="btn btn-warning ms-2">
+
+                <i class="bi bi-cart-fill"></i>
+                Cart
+
+            </a>
+
+        </div>
 
     </div>
 
@@ -69,25 +78,21 @@
 
                     <a th:href="@{/products/{id}(id=${product.id})}">
 
-                        <img
-                                th:src="@{/images/{img}(img=${product.imageName})}"
-                                class="card-img-top"
-                                style="height:250px;object-fit:cover;">
+                        <img th:src="@{/images/{img}(img=${product.imageName})}"
+                             class="card-img-top"
+                             style="height:250px;object-fit:cover;">
 
                     </a>
 
                 </div>
 
-                <!-- Default Image -->
-
                 <div th:unless="${product.imageName != null}">
 
                     <a th:href="@{/products/{id}(id=${product.id})}">
 
-                        <img
-                                src="https://placehold.co/600x400?text=No+Image"
-                                class="card-img-top"
-                                style="height:250px;object-fit:cover;">
+                        <img src="https://placehold.co/600x400?text=No+Image"
+                             class="card-img-top"
+                             style="height:250px;object-fit:cover;">
 
                     </a>
 
@@ -95,26 +100,18 @@
 
                 <div class="card-body d-flex flex-column">
 
-                    <!-- Product Name -->
-
                     <h4>
 
-                        <a
-                                th:href="@{/products/{id}(id=${product.id})}"
-                                class="text-decoration-none text-dark"
-                                th:text="${product.name}">
-
+                        <a th:href="@{/products/{id}(id=${product.id})}"
+                           class="text-decoration-none text-dark"
+                           th:text="${product.name}">
                         </a>
 
                     </h4>
 
-                    <!-- Description -->
-
                     <p class="text-muted"
                        th:text="${product.description}">
                     </p>
-
-                    <!-- Price -->
 
                     <h4 class="text-success fw-bold">
 
@@ -122,67 +119,76 @@
 
                     </h4>
 
-                    <!-- Stock -->
-
                     <p>
 
                         <strong>Stock :</strong>
 
-                        <span
-                                class="badge bg-success"
-                                th:if="${product.stock > 0}"
-                                th:text="${product.stock + ' Available'}">
+                        <span class="badge bg-success"
+                              th:if="${product.stock > 0}"
+                              th:text="${product.stock + ' Available'}">
                         </span>
 
-                        <span
-                                class="badge bg-danger"
-                                th:if="${product.stock == 0}">
+                        <span class="badge bg-danger"
+                              th:if="${product.stock == 0}">
+
                             Out of Stock
+
                         </span>
 
                     </p>
 
-                    <div class="mt-auto">
+                    <p class="mb-3">
+
+                        <strong>Category :</strong>
+
+                        <span class="badge bg-primary"
+                              th:text="${product.category != null ? product.category.name : 'No Category'}">
+                        </span>
+
+                    </p>
+
+                    <div class="mt-auto d-grid gap-2">
 
                         <!-- View -->
 
-                        <a
-                                th:href="@{/products/{id}(id=${product.id})}"
-                                class="btn btn-primary">
+                        <a th:href="@{/products/{id}(id=${product.id})}"
+                           class="btn btn-primary">
 
                             <i class="bi bi-eye-fill"></i>
-
                             View
 
                         </a>
 
-                        <!-- Edit -->
-                        <a href="/cart" class="btn btn-primary ms-2">
-                            <i class="bi bi-cart-fill"></i>
-                            Cart
-                        </a>
-                        <a
-                                th:href="@{/products/edit/{id}(id=${product.id})}"
-                                class="btn btn-warning">
+                        <!-- Add to Cart -->
 
-                            <i class="bi bi-pencil-square"></i>
+                        <a th:href="@{/cart/add/{id}(id=${product.id})}"
+                           class="btn btn-success">
 
-                            Edit
+                            <i class="bi bi-cart-plus-fill"></i>
+                            Add to Cart
 
                         </a>
 
-                        <!-- Delete -->
+                        <div class="d-flex justify-content-between">
 
-                        <a
-                                th:href="@{/products/delete/{id}(id=${product.id})}"
-                                class="btn btn-danger"
-                                onclick="return confirm('Delete this product?')">
+                            <a th:href="@{/products/edit/{id}(id=${product.id})}"
+                               class="btn btn-warning">
 
-                            <i class="bi bi-trash-fill"></i>
+                                <i class="bi bi-pencil-square"></i>
+                                Edit
 
-                            Delete
+                            </a>
 
-                        </a>
+                            <a th:href="@{/products/delete/{id}(id=${product.id})}"
+                               class="btn btn-danger"
+                               onclick="return confirm('Delete this product?')">
+
+                                <i class="bi bi-trash-fill"></i>
+                                Delete
+
+                            </a>
+
+                        </div>
 
                     </div>
 
@@ -203,7 +209,9 @@
         <h5>🛒 ShopEase</h5>
 
         <p class="mb-1">
+
             Simple • Fast • Reliable
+
         </p>
 
         <small>
