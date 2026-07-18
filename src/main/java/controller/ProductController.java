@@ -1,8 +1,10 @@
 package com.saurabh.ecommerce.controller;
+import org.springframework.data.domain.Page;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import com.saurabh.ecommerce.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
@@ -33,33 +35,59 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long category,
+            @RequestParam(required = false) String sort,
             Model model) {
 
-        if (keyword != null && !keyword.isBlank()) {
+        // Search
+        if (keyword != null && !keyword.trim().isEmpty()) {
 
             model.addAttribute("products",
                     productService.searchProducts(keyword));
 
-        } else if (category != null) {
+        }
+
+        // Category Filter
+        else if (category != null) {
 
             model.addAttribute("products",
                     productService.getProductsByCategory(category));
 
-        } else {
+        }
 
-            var productPage = productService.getProductsByPage(page);
+        // Sorting
+        else if (sort != null && !sort.isEmpty()) {
 
-            model.addAttribute("products", productPage.getContent());
+            model.addAttribute("products",
+                    productService.getSortedProducts(sort));
+
+        }
+
+        // Pagination
+        else {
+
+            Page<Product> productPage =
+                    productService.getProductsByPage(page);
+
+            model.addAttribute("products",
+                    productPage.getContent());
+
             model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", productPage.getTotalPages());
 
+            model.addAttribute("totalPages",
+                    productPage.getTotalPages());
         }
 
         model.addAttribute("categories",
                 categoryService.getAllCategories());
 
         model.addAttribute("keyword", keyword);
+
         model.addAttribute("selectedCategory", category);
+
+        model.addAttribute("selectedSort", sort);
+
+        model.addAttribute("cartCount",
+                cartService.getCartCount());
 
         return "index";
     }
@@ -99,7 +127,8 @@ public class ProductController {
 
             if (!image.isEmpty()) {
 
-                String uploadDir = System.getProperty("user.dir") + "/uploads/products/";                Path uploadPath = Paths.get(uploadDir);
+                String uploadDir = System.getProperty("user.dir") + "/uploads/products/";
+                Path uploadPath = Paths.get(uploadDir);
 
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);

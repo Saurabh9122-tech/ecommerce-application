@@ -45,7 +45,27 @@
                 </option>
 
             </select>
+            <select class="form-select me-2"
+                    name="sort">
 
+                <option value="">Sort By</option>
+
+                <option value="name"
+                        th:selected="${selectedSort=='name'}">
+                    Name (A-Z)
+                </option>
+
+                <option value="priceAsc"
+                        th:selected="${selectedSort=='priceAsc'}">
+                    Price Low → High
+                </option>
+
+                <option value="priceDesc"
+                        th:selected="${selectedSort=='priceDesc'}">
+                    Price High → Low
+                </option>
+
+            </select>
             <button class="btn btn-outline-light">
                 <i class="bi bi-search"></i>
                 Search
