@@ -50,5 +50,13 @@ public class OrderController {
     public String success() {
         return "order-success";
     }
+    @GetMapping
+    public String orderHistory(Model model) {
 
+        model.addAttribute("orders",
+                orderService.getAllOrders());
+
+        return "orders";
+
+    }
 }
