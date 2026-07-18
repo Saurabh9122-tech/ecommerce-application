@@ -30,19 +30,28 @@ public class ProductController {
 
     @GetMapping
     public String viewProducts(
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long category,
             Model model) {
 
-        if (category != null) {
+        if (keyword != null && !keyword.isBlank()) {
+
+            model.addAttribute("products",
+                    productService.searchProducts(keyword));
+
+        } else if (category != null) {
 
             model.addAttribute("products",
                     productService.getProductsByCategory(category));
 
         } else {
 
-            model.addAttribute("products",
-                    productService.searchProducts(keyword));
+            var productPage = productService.getProductsByPage(page);
+
+            model.addAttribute("products", productPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", productPage.getTotalPages());
 
         }
 

@@ -224,7 +224,28 @@
     </div>
 
 </div>
+<div class="d-flex justify-content-center mt-4"
+     th:if="${totalPages != null}">
 
+    <nav>
+
+        <ul class="pagination">
+
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0,totalPages-1)}">
+
+                <a class="page-link"
+                   th:href="@{/products(page=${i})}"
+                   th:text="${i+1}">
+                </a>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+</div>
 <footer class="bg-dark text-white text-center py-4 mt-5">
 
     <div class="container">
