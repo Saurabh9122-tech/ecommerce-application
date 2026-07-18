@@ -50,8 +50,13 @@ public class SecurityConfig {
                         .requestMatchers("/products/new/**").hasRole("ADMIN")
                         .requestMatchers("/products/edit/**").hasRole("ADMIN")
                         .requestMatchers("/products/delete/**").hasRole("ADMIN")
-                        .requestMatchers("/categories/**").hasRole("ADMIN")
-
+                        .requestMatchers(
+                                "/admin",
+                                "/categories/**",
+                                "/products/new/**",
+                                "/products/edit/**",
+                                "/products/delete/**"
+                        ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
