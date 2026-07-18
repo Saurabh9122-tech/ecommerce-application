@@ -12,17 +12,18 @@ import com.saurabh.ecommerce.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import com.saurabh.ecommerce.service.CartService;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
-
+    private final CartService cartService;
     public ProductController(ProductService productService,
-                             CategoryService categoryService) {
-
+                             CategoryService categoryService,
+                             CartService cartService) {
+        this.cartService = cartService;
         this.productService = productService;
         this.categoryService = categoryService;
     }
@@ -36,7 +37,7 @@ public class ProductController {
                 productService.searchProducts(keyword));
 
         model.addAttribute("keyword", keyword);
-
+        model.addAttribute("cartCount", cartService.getCartCount());
         return "index";
     }
     @GetMapping("/{id}")

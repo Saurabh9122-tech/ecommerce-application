@@ -97,4 +97,9 @@ public class CartService {
                 .mapToDouble(CartItem::getTotalPrice)
                 .sum();
     }
+    public int getCartCount() {
+
+        return cartRepository.findAll().size();
+
+    }
 }
