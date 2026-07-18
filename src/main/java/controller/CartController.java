@@ -47,4 +47,21 @@ public class CartController {
 
         return "redirect:/cart";
     }
+    @GetMapping("/increase/{id}")
+    public String increase(@PathVariable Long id){
+
+        cartService.increaseQuantity(id);
+
+        return "redirect:/cart";
+
+    }
+
+    @GetMapping("/decrease/{id}")
+    public String decrease(@PathVariable Long id){
+
+        cartService.decreaseQuantity(id);
+
+        return "redirect:/cart";
+
+    }
 }

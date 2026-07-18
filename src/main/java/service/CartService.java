@@ -49,7 +49,47 @@ public class CartService {
     public void removeItem(Long id) {
         cartRepository.deleteById(id);
     }
+    public void increaseQuantity(Long id){
 
+        CartItem item = cartRepository.findById(id).orElse(null);
+
+        if(item != null){
+
+            item.setQuantity(item.getQuantity()+1);
+
+            item.setTotalPrice(
+                    item.getQuantity()*item.getProduct().getPrice());
+
+            cartRepository.save(item);
+
+        }
+
+    }
+
+    public void decreaseQuantity(Long id){
+
+        CartItem item = cartRepository.findById(id).orElse(null);
+
+        if(item != null){
+
+            if(item.getQuantity()>1){
+
+                item.setQuantity(item.getQuantity()-1);
+
+                item.setTotalPrice(
+                        item.getQuantity()*item.getProduct().getPrice());
+
+                cartRepository.save(item);
+
+            }else{
+
+                cartRepository.delete(item);
+
+            }
+
+        }
+
+    }
     public double getGrandTotal() {
 
         return cartRepository.findAll()

@@ -66,8 +66,29 @@
 
             </td>
 
-            <td th:text="${item.quantity}"></td>
+            <td>
 
+                <a class="btn btn-sm btn-danger"
+
+                   th:href="@{/cart/decrease/{id}(id=${item.id})}">
+
+                    -
+
+                </a>
+
+                <span class="mx-2"
+                      th:text="${item.quantity}">
+    </span>
+
+                <a class="btn btn-sm btn-success"
+
+                   th:href="@{/cart/increase/{id}(id=${item.id})}">
+
+                    +
+
+                </a>
+
+            </td>
             <td>
 
                 ₹ <span th:text="${item.totalPrice}"></span>
