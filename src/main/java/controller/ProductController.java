@@ -31,13 +31,27 @@ public class ProductController {
     @GetMapping
     public String viewProducts(
             @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long category,
             Model model) {
 
-        model.addAttribute("products",
-                productService.searchProducts(keyword));
+        if (category != null) {
+
+            model.addAttribute("products",
+                    productService.getProductsByCategory(category));
+
+        } else {
+
+            model.addAttribute("products",
+                    productService.searchProducts(keyword));
+
+        }
+
+        model.addAttribute("categories",
+                categoryService.getAllCategories());
 
         model.addAttribute("keyword", keyword);
-        model.addAttribute("cartCount", cartService.getCartCount());
+        model.addAttribute("selectedCategory", category);
+
         return "index";
     }
     @GetMapping("/{id}")

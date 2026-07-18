@@ -15,21 +15,27 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    // Get all products
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    // Save product
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
 
+    // Get product by ID
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
 
+    // Delete product
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+
+    // Search by product name
     public List<Product> searchProducts(String keyword) {
 
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -38,4 +44,11 @@ public class ProductService {
 
         return productRepository.findByNameContainingIgnoreCase(keyword);
     }
+
+    // Get products by category
+    public List<Product> getProductsByCategory(Long categoryId) {
+
+        return productRepository.findByCategoryId(categoryId);
+    }
+
 }
