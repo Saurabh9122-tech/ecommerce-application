@@ -65,7 +65,11 @@ public class CartService {
         }
 
     }
+    public void clearCart() {
 
+        cartRepository.deleteAll();
+
+    }
     public void decreaseQuantity(Long id){
 
         CartItem item = cartRepository.findById(id).orElse(null);
