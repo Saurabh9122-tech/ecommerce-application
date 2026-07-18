@@ -9,25 +9,29 @@ import java.util.List;
 @Service
 public class CategoryService {
 
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryService(CategoryRepository repository) {
-        this.repository = repository;
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
+    // Get all categories
     public List<Category> getAllCategories() {
-        return repository.findAll();
+        return categoryRepository.findAll();
     }
 
-    public void save(Category category) {
-        repository.save(category);
+    // Save category
+    public Category saveCategory(Category category) {
+        return categoryRepository.save(category);
     }
 
-    public void delete(Long id) {
-        repository.deleteById(id);
+    // Get category by id
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).orElse(null);
     }
 
-    public Category getById(Long id) {
-        return repository.findById(id).orElse(null);
+    // Delete category
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
     }
 }

@@ -10,28 +10,53 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private final CategoryService service;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryService service) {
-        this.service = service;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("categories", service.getAllCategories());
+    public String listCategories(Model model) {
+
+        model.addAttribute("categories",
+                categoryService.getAllCategories());
+
+        return "category-list";
+    }
+
+    @GetMapping("/new")
+    public String showForm(Model model) {
+
         model.addAttribute("category", new Category());
-        return "categories";
+
+        return "category-form";
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute Category category) {
-        service.save(category);
+    public String saveCategory(@ModelAttribute Category category) {
+
+        categoryService.saveCategory(category);
+
         return "redirect:/categories";
     }
 
+    @GetMapping("/edit/{id}")
+    public String editCategory(@PathVariable Long id,
+                               Model model) {
+
+        model.addAttribute("category",
+                categoryService.getCategoryById(id));
+
+        return "category-form";
+    }
+
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        service.delete(id);
+    public String deleteCategory(@PathVariable Long id) {
+
+        categoryService.deleteCategory(id);
+
         return "redirect:/categories";
     }
+
 }
