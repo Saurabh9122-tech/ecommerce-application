@@ -23,9 +23,24 @@ public class ProductRestController {
     }
 
     // GET PRODUCT BY ID
-    @GetMapping("/{id}")
-    public Product getProduct(@PathVariable Long id) {
-        return productService.getProductById(id);
+    // UPDATE PRODUCT
+    @PutMapping("/{id}")
+    public Product updateProduct(@PathVariable Long id,
+                                 @RequestBody Product product) {
+
+        Product existing = productService.getProductById(id);
+
+        if (existing == null) {
+            return null;
+        }
+
+        existing.setName(product.getName());
+        existing.setDescription(product.getDescription());
+        existing.setPrice(product.getPrice());
+        existing.setStock(product.getStock());
+        existing.setCategory(product.getCategory());
+
+        return productService.saveProduct(existing);
     }
 
     // ADD PRODUCT
