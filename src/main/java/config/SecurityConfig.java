@@ -40,16 +40,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers(
+                                "/",
                                 "/register",
                                 "/login",
                                 "/css/**",
+                                "/js/**",
                                 "/images/**",
-                                "/uploads/**"
+                                "/uploads/**",
+                                "/api/**"
                         ).permitAll()
 
-                        .requestMatchers("/products/new/**").hasRole("ADMIN")
-                        .requestMatchers("/products/edit/**").hasRole("ADMIN")
-                        .requestMatchers("/products/delete/**").hasRole("ADMIN")
                         .requestMatchers(
                                 "/admin",
                                 "/categories/**",
@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 "/products/edit/**",
                                 "/products/delete/**"
                         ).hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
 
