@@ -43,6 +43,20 @@ public class ProductRestController {
         return productService.saveProduct(existing);
     }
 
+    // DELETE PRODUCT
+    @DeleteMapping("/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+
+        Product product = productService.getProductById(id);
+
+        if (product == null) {
+            return "Product Not Found";
+        }
+
+        productService.deleteProduct(id);
+
+        return "Product Deleted Successfully";
+    }
     // ADD PRODUCT
     @PostMapping
     public Product addProduct(@RequestBody Product product) {
