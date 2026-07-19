@@ -1,12 +1,11 @@
 package com.saurabh.ecommerce.controller;
 
 import com.saurabh.ecommerce.entity.Order;
-import com.saurabh.ecommerce.service.CartService;
 import com.saurabh.ecommerce.service.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import com.saurabh.ecommerce.service.CartService;
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
@@ -58,5 +57,14 @@ public class OrderController {
 
         return "orders";
 
+    }
+
+    @GetMapping("/invoice/{id}")
+    public String invoice(@PathVariable Long id, Model model) {
+
+        model.addAttribute("order",
+                orderService.getOrderById(id));
+
+        return "invoice";
     }
 }

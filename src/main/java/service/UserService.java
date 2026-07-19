@@ -36,4 +36,8 @@ public class UserService {
     public long getUserCount() {
         return userRepository.count();
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
 }

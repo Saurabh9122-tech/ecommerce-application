@@ -4,7 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
+import com.saurabh.ecommerce.service.CartService;
 import com.saurabh.ecommerce.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
@@ -14,7 +14,7 @@ import com.saurabh.ecommerce.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.saurabh.ecommerce.service.CartService;
+
 @Controller
 @RequestMapping("/products")
 public class ProductController {
