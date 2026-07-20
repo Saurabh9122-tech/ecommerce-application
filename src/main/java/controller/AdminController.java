@@ -42,6 +42,9 @@ public class AdminController {
         model.addAttribute("userCount",
                 userService.getUserCount());
 
+        model.addAttribute("revenue",
+                orderService.getRevenue());
+
         return "dashboard";
     }
 
