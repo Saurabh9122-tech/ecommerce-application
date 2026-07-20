@@ -1,11 +1,14 @@
 package com.saurabh.ecommerce.controller;
 
-import com.saurabh.ecommerce.entity.Product;
-import com.saurabh.ecommerce.service.ProductService;
-import org.springframework.web.bind.annotation.*;
 import com.saurabh.ecommerce.dto.ProductDTO;
-import java.util.stream.Collectors;
+import com.saurabh.ecommerce.entity.Product;
+import com.saurabh.ecommerce.exception.ProductNotFoundException;
+import com.saurabh.ecommerce.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -34,14 +37,13 @@ public class ProductRestController {
     }
 
     // GET PRODUCT BY ID
-    // UPDATE PRODUCT
     @GetMapping("/{id}")
     public ProductDTO getProduct(@PathVariable Long id) {
 
         Product product = productService.getProductById(id);
 
         if (product == null) {
-            return null;
+            throw new ProductNotFoundException(id);
         }
 
         return new ProductDTO(
@@ -53,6 +55,34 @@ public class ProductRestController {
         );
     }
 
+    // ADD PRODUCT
+    @PostMapping
+    public Product addProduct(@Valid @RequestBody Product product) {
+
+        return productService.saveProduct(product);
+
+    }
+
+    // UPDATE PRODUCT
+    @PutMapping("/{id}")
+    public Product updateProduct(@PathVariable Long id,
+                                 @Valid @RequestBody Product updatedProduct) {
+
+        Product existingProduct = productService.getProductById(id);
+
+        if (existingProduct == null) {
+            throw new ProductNotFoundException(id);
+        }
+
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setStock(updatedProduct.getStock());
+        existingProduct.setCategory(updatedProduct.getCategory());
+
+        return productService.saveProduct(existingProduct);
+    }
+
     // DELETE PRODUCT
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable Long id) {
@@ -60,18 +90,11 @@ public class ProductRestController {
         Product product = productService.getProductById(id);
 
         if (product == null) {
-            return "Product Not Found";
+            throw new ProductNotFoundException(id);
         }
 
         productService.deleteProduct(id);
 
         return "Product Deleted Successfully";
-    }
-    // ADD PRODUCT
-    @PostMapping
-    public Product addProduct(@RequestBody Product product) {
-
-        return productService.saveProduct(product);
-
     }
 }
