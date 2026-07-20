@@ -3,7 +3,8 @@ package com.saurabh.ecommerce.controller;
 import com.saurabh.ecommerce.entity.Product;
 import com.saurabh.ecommerce.service.ProductService;
 import org.springframework.web.bind.annotation.*;
-
+import com.saurabh.ecommerce.dto.ProductDTO;
+import java.util.stream.Collectors;
 import java.util.List;
 
 @RestController
@@ -18,29 +19,38 @@ public class ProductRestController {
 
     // GET ALL PRODUCTS
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<ProductDTO> getAllProducts() {
+
+        return productService.getAllProducts()
+                .stream()
+                .map(product -> new ProductDTO(
+                        product.getId(),
+                        product.getName(),
+                        product.getDescription(),
+                        product.getPrice(),
+                        product.getStock()
+                ))
+                .collect(Collectors.toList());
     }
 
     // GET PRODUCT BY ID
     // UPDATE PRODUCT
-    @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id,
-                                 @RequestBody Product product) {
+    @GetMapping("/{id}")
+    public ProductDTO getProduct(@PathVariable Long id) {
 
-        Product existing = productService.getProductById(id);
+        Product product = productService.getProductById(id);
 
-        if (existing == null) {
+        if (product == null) {
             return null;
         }
 
-        existing.setName(product.getName());
-        existing.setDescription(product.getDescription());
-        existing.setPrice(product.getPrice());
-        existing.setStock(product.getStock());
-        existing.setCategory(product.getCategory());
-
-        return productService.saveProduct(existing);
+        return new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock()
+        );
     }
 
     // DELETE PRODUCT
