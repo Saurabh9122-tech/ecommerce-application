@@ -13,9 +13,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final LoginSuccessHandler loginSuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+                          LoginSuccessHandler loginSuccessHandler) {
+
         this.userDetailsService = userDetailsService;
+        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     @Bean
@@ -26,6 +30,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
+
         return config.getAuthenticationManager();
     }
 
@@ -39,6 +44,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // Public Pages
                         .requestMatchers(
                                 "/",
                                 "/register",
@@ -47,14 +53,27 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/uploads/**",
-                                "/api/**",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
                         ).permitAll()
 
+                        // REST API (optional)
+                        .requestMatchers("/api/**")
+                        .permitAll()
+
+                        // User Pages
                         .requestMatchers(
-                                "/admin",
+                                "/home",
+                                "/products",
+                                "/products/**",
+                                "/cart/**",
+                                "/orders/**"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        // Admin Pages
+                        .requestMatchers(
+                                "/admin/**",
                                 "/categories/**",
                                 "/products/new/**",
                                 "/products/edit/**",
@@ -62,17 +81,19 @@ public class SecurityConfig {
                         ).hasRole("ADMIN")
 
                         .anyRequest().authenticated()
+
                 )
 
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/products", true)
+                        .successHandler(loginSuccessHandler)
                         .permitAll()
                 )
 
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
-                        .permitAll());
+                        .permitAll()
+                );
 
         return http.build();
     }
