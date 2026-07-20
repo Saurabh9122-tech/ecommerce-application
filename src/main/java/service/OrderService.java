@@ -16,6 +16,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
+    // Save Order
     public Order saveOrder(Order order) {
 
         order.setOrderDate(LocalDateTime.now());
@@ -23,17 +24,32 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    // Get All Orders
     public List<Order> getAllOrders() {
 
         return orderRepository.findAllByOrderByOrderDateDesc();
 
     }
 
+    // Get Order By Id
     public Order getOrderById(Long id) {
+
         return orderRepository.findById(id).orElse(null);
+
     }
 
+    // Dashboard Statistics
     public long getOrderCount() {
+
         return orderRepository.count();
+
+    }
+
+    public Double getRevenue() {
+
+        Double revenue = orderRepository.getTotalRevenue();
+
+        return revenue == null ? 0.0 : revenue;
+
     }
 }

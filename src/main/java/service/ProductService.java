@@ -2,6 +2,8 @@ package com.saurabh.ecommerce.service;
 
 import com.saurabh.ecommerce.entity.Product;
 import com.saurabh.ecommerce.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,9 @@ import java.util.List;
 
 @Service
 public class ProductService {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(ProductService.class);
 
     private final ProductRepository productRepository;
 
@@ -26,21 +31,32 @@ public class ProductService {
 
     // Save product
     public Product saveProduct(Product product) {
+
+        logger.info("Saving product: {}", product.getName());
+
         return productRepository.save(product);
     }
 
     // Get product by ID
     public Product getProductById(Long id) {
+
+        logger.info("Fetching product id {}", id);
+
         return productRepository.findById(id).orElse(null);
     }
 
     // Delete product
     public void deleteProduct(Long id) {
+
+        logger.warn("Deleting product with id {}", id);
+
         productRepository.deleteById(id);
     }
 
     // Search products
     public List<Product> searchProducts(String keyword) {
+
+        logger.info("Searching products with keyword: {}", keyword);
 
         if (keyword == null || keyword.trim().isEmpty()) {
             return productRepository.findAll();
@@ -48,12 +64,13 @@ public class ProductService {
 
         return productRepository.findByNameContainingIgnoreCase(keyword);
     }
-
-    // Filter by category
+    // Filter products by category
     public List<Product> getProductsByCategory(Long categoryId) {
+
+        logger.info("Fetching products for category id {}", categoryId);
+
         return productRepository.findByCategoryId(categoryId);
     }
-
     // Pagination
     public Page<Product> getProductsByPage(int page) {
 
@@ -83,6 +100,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    // Total products
     public long getProductCount() {
         return productRepository.count();
     }
