@@ -23,7 +23,7 @@ public class HomeController {
     public String home(Model model) {
 
         model.addAttribute("products",
-                productService.getAllProducts());
+                productService.getProductsByPage(0).getContent());
 
         model.addAttribute("categories",
                 categoryService.getAllCategories());
