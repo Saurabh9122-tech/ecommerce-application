@@ -9,6 +9,21 @@
 
     <div class="row">
 
+        <div class="p-5 mb-5 bg-primary text-white rounded shadow">
+
+            <h1>Welcome to E-Commerce Store</h1>
+
+            <p class="lead">
+                Shop the latest products at the best prices.
+            </p>
+
+            <a href="/products"
+               class="btn btn-light btn-lg">
+                Shop Now
+            </a>
+
+        </div>
+
         <div
                 class="col-md-4 mb-4"
                 th:each="product : ${products}">
@@ -91,6 +106,43 @@
                 </li>
 
             </ul>
+
+    <h3 class="mb-4">
+
+        Shop by Category
+
+    </h3>
+
+    <div class="row mb-5">
+
+        <div class="col-md-3 mb-3"
+             th:each="category : ${categories}">
+
+            <div class="card text-center shadow">
+
+                <div class="card-body">
+                    <h3 class="mb-4">
+
+                        Featured Products
+
+                    </h3>
+
+                    <h5 th:text="${category.name}"></h5>
+
+                    <a th:href="@{/products(category=${category.id})}"
+                       class="btn btn-outline-primary">
+
+                        Browse
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
             <form class="d-flex" action="/products">
 
