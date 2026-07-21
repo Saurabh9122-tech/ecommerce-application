@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    // Get all orders sorted by newest first
-    List<Order> findAllByOrderByOrderDateDesc();
+    List<Order> findByEmailOrderByOrderDateDesc(String email);
 
     // Dashboard revenue
     @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o")

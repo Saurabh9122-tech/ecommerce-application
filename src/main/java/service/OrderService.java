@@ -24,10 +24,17 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    // Get All Orders
+    // Get ALL Orders (Admin)
     public List<Order> getAllOrders() {
 
-        return orderRepository.findAllByOrderByOrderDateDesc();
+        return orderRepository.findAll();
+
+    }
+
+    // Get Orders of Logged-in User
+    public List<Order> getOrdersByEmail(String email) {
+
+        return orderRepository.findByEmailOrderByOrderDateDesc(email);
 
     }
 

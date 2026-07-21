@@ -7,6 +7,7 @@ import com.saurabh.ecommerce.repository.CartRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class CartService {
         return userService.getUserByEmail(email);
     }
 
+    @Transactional
     public void addToCart(Product product) {
 
         User user = getCurrentUser();
@@ -50,9 +52,7 @@ public class CartService {
             item = new CartItem();
 
             item.setProduct(product);
-
             item.setUser(user);
-
             item.setQuantity(1);
         }
 
@@ -68,12 +68,14 @@ public class CartService {
 
     }
 
+    @Transactional
     public void removeItem(Long id) {
 
         cartRepository.deleteById(id);
 
     }
 
+    @Transactional
     public void increaseQuantity(Long id) {
 
         CartItem item = cartRepository.findById(id).orElse(null);
@@ -89,6 +91,7 @@ public class CartService {
         }
     }
 
+    @Transactional
     public void decreaseQuantity(Long id) {
 
         CartItem item = cartRepository.findById(id).orElse(null);
@@ -127,6 +130,7 @@ public class CartService {
 
     }
 
+    @Transactional
     public void clearCart() {
 
         cartRepository.deleteByUser(getCurrentUser());
