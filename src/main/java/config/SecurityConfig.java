@@ -24,7 +24,9 @@ public class SecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
+
     }
 
     @Bean
@@ -32,69 +34,100 @@ public class SecurityConfig {
             AuthenticationConfiguration config) throws Exception {
 
         return config.getAuthenticationManager();
+
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
 
         http
+
                 .csrf(csrf -> csrf.disable())
 
                 .userDetailsService(userDetailsService)
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // ==========================
                         // Public Pages
+                        // ==========================
+
                         .requestMatchers(
                                 "/",
                                 "/register",
                                 "/login",
+
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
                                 "/uploads/**",
+
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+
+                                "/api/**"
                         ).permitAll()
 
-                        // REST API (optional)
-                        .requestMatchers("/api/**")
-                        .permitAll()
+                        // ==========================
+                        // ADMIN ONLY
+                        // ==========================
 
-                        // User Pages
+                        .requestMatchers("/admin/**")
+
+                        .hasRole("ADMIN")
+
+                        // ==========================
+                        // USER + ADMIN
+                        // ==========================
+
                         .requestMatchers(
+
                                 "/home",
+
                                 "/products",
                                 "/products/**",
+
                                 "/cart/**",
-                                "/orders/**"
-                        ).hasAnyRole("USER", "ADMIN")
 
-                        // Admin Pages
-                        .requestMatchers(
-                                "/admin/**",
-                                "/categories/**",
-                                "/products/new/**",
-                                "/products/edit/**",
-                                "/products/delete/**"
-                        ).hasRole("ADMIN")
+                                "/orders/**",
 
-                        .anyRequest().authenticated()
+                                "/profile/**"
+
+                        )
+
+                        .hasAnyRole("USER", "ADMIN")
+
+                        // ==========================
+                        // Any Other Request
+                        // ==========================
+
+                        .anyRequest()
+
+                        .authenticated()
 
                 )
 
                 .formLogin(login -> login
+
                         .loginPage("/login")
+
                         .successHandler(loginSuccessHandler)
+
                         .permitAll()
+
                 )
 
                 .logout(logout -> logout
+
                         .logoutSuccessUrl("/login?logout")
+
                         .permitAll()
+
                 );
 
         return http.build();
+
     }
 }
