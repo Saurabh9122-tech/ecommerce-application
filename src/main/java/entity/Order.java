@@ -23,4 +23,6 @@ public class Order {
     private double totalAmount;
 
     private LocalDateTime orderDate;
+
+    private String status;
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Page Not Found</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container text-center mt-5">
+
+    <h1 class="display-1 text-warning">
+
+        404
+
+    </h1>
+
+    <h3>
+
+        Page Not Found
+
+    </h3>
+
+    <p th:text="${errorMessage}"></p>
+
+    <a href="/home"
+       class="btn btn-primary">
+
+        Go Home
+
+    </a>
+
+</div>
+
+</body>
+
+</html>
