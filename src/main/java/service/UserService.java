@@ -17,6 +17,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    // Register new user
     public void registerUser(User user) {
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -28,18 +29,24 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    // Find user by email
     public User findByEmail(String email) {
-
         return userRepository.findByEmail(email).orElse(null);
-
     }
 
+    // Get user by email
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
+
+    // Save updated user
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    // Count total users
     public long getUserCount() {
-
         return userRepository.count();
-
     }
 }

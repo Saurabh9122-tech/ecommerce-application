@@ -30,22 +30,12 @@ public class AdminController {
     @GetMapping("/admin")
     public String dashboard(Model model) {
 
-        model.addAttribute("productCount",
-                productService.getProductCount());
-
-        model.addAttribute("categoryCount",
-                categoryService.getCategoryCount());
-
-        model.addAttribute("orderCount",
-                orderService.getOrderCount());
-
-        model.addAttribute("userCount",
-                userService.getUserCount());
-
-        model.addAttribute("revenue",
-                orderService.getRevenue());
+        model.addAttribute("productCount", productService.getProductCount());
+        model.addAttribute("categoryCount", categoryService.getCategoryCount());
+        model.addAttribute("orderCount", orderService.getOrderCount());
+        model.addAttribute("userCount", userService.getUserCount());
+        model.addAttribute("revenue", orderService.getRevenue());
 
         return "dashboard";
     }
-
 }
