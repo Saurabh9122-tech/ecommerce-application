@@ -8,7 +8,77 @@
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
 
+        body{
+
+            background:#f8f9fa;
+
+        }
+
+        .hero{
+
+            background:linear-gradient(135deg,#0d6efd,#6610f2);
+
+            color:white;
+
+            padding:60px;
+
+            border-radius:20px;
+
+            margin-bottom:40px;
+
+        }
+
+        .card{
+
+            transition:.3s;
+
+            border-radius:20px;
+
+            overflow:hidden;
+
+        }
+
+        .card:hover{
+
+            transform:translateY(-8px);
+
+            box-shadow:0 15px 30px rgba(0,0,0,.2);
+
+        }
+
+        .card img{
+
+            transition:.4s;
+
+        }
+
+        .card:hover img{
+
+            transform:scale(1.08);
+
+        }
+
+        .btn{
+
+            border-radius:30px;
+
+        }
+
+        .badge{
+
+            font-size:.8rem;
+
+        }
+
+        .navbar{
+
+            box-shadow:0 5px 20px rgba(0,0,0,.2);
+
+        }
+
+    </style>
 </head>
 
 <body class="bg-light">
@@ -75,19 +145,41 @@
 
         <div>
 
-            <a href="/products/new"
-               class="btn btn-success">
+            <a href="/profile"
+               class="btn btn-outline-light">
 
-                <i class="bi bi-plus-circle"></i>
-                Add Product
+                <i class="bi bi-person-circle"></i>
+
+                Profile
 
             </a>
-            <a href="/categories"
-               class="btn btn-info ms-2">
 
-                <i class="bi bi-tags-fill"></i>
+            <a href="/orders"
+               class="btn btn-outline-warning ms-2">
 
-                Categories
+                <i class="bi bi-bag-check"></i>
+
+                Orders
+
+            </a>
+
+            <a href="/cart"
+               class="btn btn-warning ms-2 position-relative">
+
+                <i class="bi bi-cart-fill"></i>
+
+                Cart
+
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      th:text="${cartCount}">
+    </span>
+
+            </a>
+
+            <a href="/logout"
+               class="btn btn-danger ms-2">
+
+                Logout
 
             </a>
             <a href="/cart"
@@ -190,28 +282,56 @@
 
                     </p>
 
-                    <div class="mt-auto d-grid gap-2">
+                    <div class="mt-auto">
 
-                        <!-- View -->
+                        <div class="d-flex justify-content-between mb-3">
 
-                        <a th:href="@{/products/{id}(id=${product.id})}"
-                           class="btn btn-primary">
+        <span class="text-warning fs-5">
 
-                            <i class="bi bi-eye-fill"></i>
-                            View
+            ★★★★☆
 
-                        </a>
+        </span>
 
-                        <!-- Add to Cart -->
+                            <a href="#" class="text-danger fs-4">
 
-                        <a th:href="@{/cart/add/{id}(id=${product.id})}"
-                           class="btn btn-success">
+                                <i class="bi bi-heart"></i>
 
-                            <i class="bi bi-cart-plus-fill"></i>
-                            Add to Cart
+                            </a>
 
-                        </a>
+                        </div>
 
+                        <div class="d-grid gap-2">
+
+                            <a th:href="@{/products/{id}(id=${product.id})}"
+                               class="btn btn-outline-primary rounded-pill">
+
+                                <i class="bi bi-eye"></i>
+
+                                View Details
+
+                            </a>
+
+                            <a th:href="@{/cart/add/{id}(id=${product.id})}"
+                               class="btn btn-success rounded-pill">
+
+                                <i class="bi bi-cart-plus-fill"></i>
+
+                                Add To Cart
+
+                            </a>
+
+                            <a th:href="@{/orders/checkout}"
+                               class="btn btn-warning rounded-pill">
+
+                                <i class="bi bi-lightning-fill"></i>
+
+                                Buy Now
+
+                            </a>
+
+                        </div>
+
+                    </div>
                         <div class="d-flex justify-content-between">
 
                             <a th:href="@{/products/edit/{id}(id=${product.id})}"
@@ -264,7 +384,46 @@
         </ul>
 
     </nav>
+    </nav>
 
+    <!-- HERO SECTION START -->
+
+    <div class="container mt-4">
+
+        <div class="hero text-center">
+
+            <h1 class="display-4 fw-bold">
+
+                Welcome to ShopEase
+
+            </h1>
+
+            <p class="lead">
+
+                Discover the best products at unbeatable prices.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- HERO SECTION END -->
+
+    <div class="container mt-5">
+
+        <div class="row">
+
+            <div class="col-md-4 mb-4"
+                 th:each="product : ${products}">
+
+                <!-- Product Card -->
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
 <footer class="bg-dark text-white text-center py-4 mt-5">
 
