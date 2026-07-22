@@ -9,60 +9,89 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
 public class SecurityConfig {
 
+
     private final CustomUserDetailsService userDetailsService;
+
     private final LoginSuccessHandler loginSuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService,
-                          LoginSuccessHandler loginSuccessHandler) {
+
+
+    public SecurityConfig(
+            CustomUserDetailsService userDetailsService,
+            LoginSuccessHandler loginSuccessHandler) {
 
         this.userDetailsService = userDetailsService;
         this.loginSuccessHandler = loginSuccessHandler;
+
     }
 
+
+
+
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder(){
 
         return new BCryptPasswordEncoder();
 
     }
 
+
+
+
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config) throws Exception {
+            AuthenticationConfiguration config)
+            throws Exception {
 
         return config.getAuthenticationManager();
 
     }
 
+
+
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
+
 
         http
 
                 .csrf(csrf -> csrf.disable())
 
+
                 .userDetailsService(userDetailsService)
+
+
 
                 .authorizeHttpRequests(auth -> auth
 
 
-                        // Public
+
+                        // PUBLIC PAGES
                         .requestMatchers(
                                 "/",
                                 "/register",
                                 "/login",
                                 "/css/**",
                                 "/js/**",
-                                "/uploads/**"
+                                "/uploads/**",
+
+                                // REST API ACCESS
+                                "/api/products/**"
+
                         ).permitAll()
 
 
 
-                        // ADMIN ONLY
+
+                        // ADMIN ACCESS
+
                         .requestMatchers(
                                 "/products/new",
                                 "/products/save",
@@ -70,25 +99,41 @@ public class SecurityConfig {
                                 "/products/delete/**",
                                 "/categories/**",
                                 "/admin/**"
+
                         ).hasRole("ADMIN")
 
 
 
-                        // USER ORDER ACCESS
+
+
+                        // USER + ADMIN
+
                         .requestMatchers(
+
                                 "/orders/**",
                                 "/cart/**",
                                 "/wishlist/**",
                                 "/profile/**",
                                 "/products",
-                                "/products/{id}"
-                        ).hasAnyRole("USER","ADMIN")
+                                "/products/**"
+
+                        ).hasAnyRole(
+                                "USER",
+                                "ADMIN"
+                        )
+
+
 
 
 
                         .anyRequest().authenticated()
 
+
+
                 )
+
+
+
 
                 .formLogin(login -> login
 
@@ -100,6 +145,9 @@ public class SecurityConfig {
 
                 )
 
+
+
+
                 .logout(logout -> logout
 
                         .logoutSuccessUrl("/login?logout")
@@ -108,7 +156,10 @@ public class SecurityConfig {
 
                 );
 
+
+
         return http.build();
 
     }
+
 }
