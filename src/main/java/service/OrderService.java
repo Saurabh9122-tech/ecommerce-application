@@ -44,14 +44,27 @@ public class OrderService {
         return orderRepository.findById(id).orElse(null);
 
     }
+    public void updateStatus(Long id,String status){
 
+
+        Order order =
+                orderRepository.findById(id)
+                        .orElseThrow();
+
+
+        order.setStatus(status);
+
+
+        orderRepository.save(order);
+
+
+    }
     // Dashboard Statistics
     public long getOrderCount() {
 
         return orderRepository.count();
 
     }
-
     public Double getRevenue() {
 
         Double revenue = orderRepository.getTotalRevenue();

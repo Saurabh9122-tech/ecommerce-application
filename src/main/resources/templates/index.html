@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>ShopEase - E-Commerce Store</title>
 
@@ -87,8 +87,8 @@
 
     <div class="container">
 
-        <a class="navbar-brand fw-bold" href="/products">
-            🛒 ShopEase
+        <a class="navbar-brand fw-bold"
+           th:href="@{/products}">            🛒 ShopEase
         </a>
 
         <form class="d-flex"
@@ -145,16 +145,15 @@
 
         <div>
 
-            <a href="/profile"
+            <a th:href="@{/profile}"
                class="btn btn-outline-light">
 
                 <i class="bi bi-person-circle"></i>
-
                 Profile
 
             </a>
 
-            <a href="/orders"
+            <a th:href="@{/orders}"
                class="btn btn-outline-warning ms-2">
 
                 <i class="bi bi-bag-check"></i>
@@ -163,26 +162,13 @@
 
             </a>
 
-            <a href="/cart"
-               class="btn btn-warning ms-2 position-relative">
-
-                <i class="bi bi-cart-fill"></i>
-
-                Cart
-
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                      th:text="${cartCount}">
-    </span>
-
-            </a>
-
-            <a href="/logout"
+            <a th:href="@{/logout}"
                class="btn btn-danger ms-2">
 
                 Logout
 
             </a>
-            <a href="/cart"
+            <a th:href="@{/cart}"
                class="btn btn-warning ms-2 position-relative">
 
                 <i class="bi bi-cart-fill"></i>
@@ -292,9 +278,15 @@
 
         </span>
 
-                            <a th:href="@{/wishlist/add/{id}(id=${product.id})}"
-                               class="text-danger fs-4">
-                                <i class="bi bi-heart"></i>
+                            <a th:href="${wishlistIds.contains(product.id)}
+        ? @{/wishlist/remove/{id}(id=${product.id})}
+        : @{/wishlist/add/{id}(id=${product.id})}"
+                               class="fs-4">
+
+                                <i th:class="${wishlistIds.contains(product.id)}
+        ? 'bi bi-heart-fill text-danger'
+        : 'bi bi-heart text-secondary'">
+                                </i>
 
                             </a>
 
@@ -320,38 +312,51 @@
 
                             </a>
 
-                            <a th:href="@{/orders/checkout}"
-                               class="btn btn-warning rounded-pill">
+                            <form th:action="@{/orders/buy}"
+                                  method="get">
 
-                                <i class="bi bi-lightning-fill"></i>
+                                <input type="hidden"
+                                       name="productId"
+                                       th:value="${product.id}">
 
-                                Buy Now
+                                <button type="submit"
+                                        class="btn btn-warning rounded-pill fw-bold w-100">
 
-                            </a>
+                                    <i class="bi bi-lightning-fill"></i>
+
+                                    Buy Now
+
+                                </button>
+
+                            </form>
 
                         </div>
 
                     </div>
-                        <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between"
+                         sec:authorize="hasRole('ADMIN')">
 
-                            <a th:href="@{/products/edit/{id}(id=${product.id})}"
-                               class="btn btn-warning">
 
-                                <i class="bi bi-pencil-square"></i>
-                                Edit
+                        <a th:href="@{/products/edit/{id}(id=${product.id})}"
+                           class="btn btn-warning">
 
-                            </a>
+                            <i class="bi bi-pencil"></i>
+                            Edit
 
-                            <a th:href="@{/products/delete/{id}(id=${product.id})}"
-                               class="btn btn-danger"
-                               onclick="return confirm('Delete this product?')">
+                        </a>
 
-                                <i class="bi bi-trash-fill"></i>
-                                Delete
 
-                            </a>
+                        <a th:href="@{/products/delete/{id}(id=${product.id})}"
+                           class="btn btn-danger"
+                           onclick="return confirm('Delete this product?')">
 
-                        </div>
+                            <i class="bi bi-trash"></i>
+                            Delete
+
+                        </a>
+
+
+                    </div>
 
                     </div>
 
@@ -375,7 +380,12 @@
                 th:each="i : ${#numbers.sequence(0,totalPages-1)}">
 
                 <a class="page-link"
-                   th:href="@{/products(page=${i})}"
+                   th:href="@{/products(
+        page=${i},
+        keyword=${keyword},
+        category=${selectedCategory},
+        sort=${selectedSort}
+   )}"
                    th:text="${i+1}">
                 </a>
 

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Buy Now</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+
+        body{
+            background:#f5f5f5;
+        }
+
+
+        .product-box{
+
+            border-radius:20px;
+            overflow:hidden;
+            box-shadow:0 10px 30px rgba(0,0,0,0.15);
+
+        }
+
+
+        .product-name{
+
+            font-size:28px;
+            font-weight:bold;
+
+        }
+
+
+        .price{
+
+            color:#198754;
+            font-size:35px;
+            font-weight:bold;
+
+        }
+
+
+        .buy-btn{
+
+            background:#ffc107;
+            border:none;
+            color:#000;
+            font-weight:bold;
+            font-size:18px;
+            border-radius:30px;
+            padding:12px;
+
+        }
+
+
+        .buy-btn:hover{
+
+            background:#ffca2c;
+            color:#000;
+
+        }
+
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container mt-5">
+
+
+    <div class="card product-box">
+
+
+        <div class="card-header bg-warning text-dark text-center">
+
+            <h3 class="fw-bold">
+
+                <i class="bi bi-lightning-fill"></i>
+                Confirm Your Order
+
+            </h3>
+
+        </div>
+
+
+
+        <div class="card-body p-5">
+
+
+            <div class="text-center mb-4">
+
+
+                <h2 class="product-name"
+                    th:text="${product.name}">
+                </h2>
+
+
+
+                <h2 class="price">
+
+                    ₹ <span th:text="${product.price}"></span>
+
+                </h2>
+
+
+            </div>
+
+
+
+            <hr>
+
+
+
+            <form th:action="@{/orders/buy-place}"
+                  th:object="${order}"
+                  method="post">
+
+
+                <input type="hidden"
+                       name="productId"
+                       th:value="${product.id}">
+
+
+
+                <div class="mb-3">
+
+                    <label class="fw-bold">
+                        Name
+                    </label>
+
+                    <input class="form-control"
+                           placeholder="Enter Name"
+                           th:field="*{customerName}"
+                           required>
+
+                </div>
+
+
+
+
+                <div class="mb-3">
+
+                    <label class="fw-bold">
+                        Email
+                    </label>
+
+                    <input class="form-control"
+                           placeholder="Enter Email"
+                           th:field="*{email}"
+                           required>
+
+                </div>
+
+
+
+
+                <div class="mb-3">
+
+                    <label class="fw-bold">
+                        Address
+                    </label>
+
+
+                    <textarea class="form-control"
+                              rows="3"
+                              placeholder="Shipping Address"
+                              th:field="*{address}"
+                              required>
+</textarea>
+
+
+                </div>
+
+
+
+                <button class="btn buy-btn w-100">
+
+                    <i class="bi bi-cart-check-fill"></i>
+
+                    Proceed to Payment
+
+                </button>
+
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

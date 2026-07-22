@@ -1,6 +1,8 @@
 package com.saurabh.ecommerce.service;
-
-import com.saurabh.ecommerce.entity.*;
+import org.springframework.transaction.annotation.Transactional;
+import com.saurabh.ecommerce.entity.Product;
+import com.saurabh.ecommerce.entity.User;
+import com.saurabh.ecommerce.entity.Wishlist;
 import com.saurabh.ecommerce.repository.WishlistRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +23,8 @@ public class WishlistService {
         this.userService = userService;
     }
 
-    private User currentUser(){
+
+    private User getCurrentUser(){
 
         Authentication auth =
                 SecurityContextHolder.getContext()
@@ -30,30 +33,43 @@ public class WishlistService {
         return userService.getUserByEmail(auth.getName());
     }
 
-    public void add(Product product){
+    public boolean isInWishlist(Long productId){
 
-        User user=currentUser();
+        return wishlistRepository
+                .findByProductIdAndUser(productId, getCurrentUser())
+                .isPresent();
+    }
+    public void addWishlist(Product product){
+
+        User user = getCurrentUser();
 
         if(wishlistRepository
-                .findByUserAndProduct(user,product)
+                .findByProductIdAndUser(product.getId(), user)
                 .isEmpty()){
 
-            Wishlist w=new Wishlist();
+            Wishlist wishlist = new Wishlist();
 
-            w.setUser(user);
+            wishlist.setProduct(product);
+            wishlist.setUser(user);
 
-            w.setProduct(product);
-
-            wishlistRepository.save(w);
-
+            wishlistRepository.save(wishlist);
         }
+    }
+
+
+    public List<Wishlist> getMyWishlist(){
+
+        return wishlistRepository.findByUser(getCurrentUser());
 
     }
 
-    public List<Wishlist> getWishlist(){
+    @Transactional
+    public void removeWishlist(Long productId) {
 
-        return wishlistRepository.findByUser(currentUser());
-
+        wishlistRepository.deleteByProductIdAndUser(
+                productId,
+                getCurrentUser()
+        );
     }
 
 }

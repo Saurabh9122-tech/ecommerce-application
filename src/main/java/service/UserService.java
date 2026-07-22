@@ -2,51 +2,56 @@ package com.saurabh.ecommerce.service;
 
 import com.saurabh.ecommerce.entity.User;
 import com.saurabh.ecommerce.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    private final BCryptPasswordEncoder passwordEncoder =
-            new BCryptPasswordEncoder();
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder) {
+
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
-    // Register new user
-    public void registerUser(User user) {
+    public long getUserCount(){
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists.");
-        }
+        return userRepository.count();
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+
+    public User registerUser(User user) {
+
+        user.setPassword(
+                passwordEncoder.encode(user.getPassword())
+        );
+
         user.setRole("ROLE_USER");
 
-        userRepository.save(user);
-    }
-
-    // Find user by email
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
-
-    // Get user by email
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
-
-    // Save updated user
-    public User saveUser(User user) {
         return userRepository.save(user);
+
     }
 
-    // Count total users
-    public long getUserCount() {
-        return userRepository.count();
+
+    public User saveUser(User user){
+
+        return userRepository.save(user);
+
     }
+
+
+    public User getUserByEmail(String email){
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new RuntimeException("User not found")
+                );
+    }
+
 }

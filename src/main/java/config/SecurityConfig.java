@@ -49,63 +49,44 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // ==========================
-                        // Public Pages
-                        // ==========================
 
+                        // Public
                         .requestMatchers(
                                 "/",
                                 "/register",
                                 "/login",
-
                                 "/css/**",
                                 "/js/**",
-                                "/images/**",
-                                "/uploads/**",
-
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**",
-
-                                "/api/**"
+                                "/uploads/**"
                         ).permitAll()
 
-                        // ==========================
+
+
                         // ADMIN ONLY
-                        // ==========================
-
-                        .requestMatchers("/admin/**")
-
-                        .hasRole("ADMIN")
-
-                        // ==========================
-                        // USER + ADMIN
-                        // ==========================
-
                         .requestMatchers(
+                                "/products/new",
+                                "/products/save",
+                                "/products/edit/**",
+                                "/products/delete/**",
+                                "/categories/**",
+                                "/admin/**"
+                        ).hasRole("ADMIN")
 
-                                "/home",
 
-                                "/products",
-                                "/products/**",
 
-                                "/cart/**",
-
+                        // USER ORDER ACCESS
+                        .requestMatchers(
                                 "/orders/**",
+                                "/cart/**",
+                                "/wishlist/**",
+                                "/profile/**",
+                                "/products",
+                                "/products/{id}"
+                        ).hasAnyRole("USER","ADMIN")
 
-                                "/profile/**"
 
-                        )
 
-                        .hasAnyRole("USER", "ADMIN")
-
-                        // ==========================
-                        // Any Other Request
-                        // ==========================
-
-                        .anyRequest()
-
-                        .authenticated()
+                        .anyRequest().authenticated()
 
                 )
 
