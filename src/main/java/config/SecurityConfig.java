@@ -1,13 +1,20 @@
 package com.saurabh.ecommerce.config;
 
+
 import com.saurabh.ecommerce.service.CustomUserDetailsService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
+
 
 
 @Configuration
@@ -24,10 +31,12 @@ public class SecurityConfig {
             CustomUserDetailsService userDetailsService,
             LoginSuccessHandler loginSuccessHandler) {
 
+
         this.userDetailsService = userDetailsService;
         this.loginSuccessHandler = loginSuccessHandler;
 
     }
+
 
 
 
@@ -42,10 +51,12 @@ public class SecurityConfig {
 
 
 
+
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config)
             throws Exception {
+
 
         return config.getAuthenticationManager();
 
@@ -55,14 +66,18 @@ public class SecurityConfig {
 
 
 
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http)
             throws Exception {
 
 
         http
 
+
                 .csrf(csrf -> csrf.disable())
+
 
 
                 .userDetailsService(userDetailsService)
@@ -73,34 +88,34 @@ public class SecurityConfig {
 
 
 
-                        // PUBLIC PAGES
+                        // PUBLIC
                         .requestMatchers(
+
                                 "/",
-                                "/register",
                                 "/login",
+                                "/register",
+
                                 "/css/**",
                                 "/js/**",
                                 "/uploads/**",
 
-                                // REST API ACCESS
+                                // REST API
                                 "/api/products/**"
 
-                        ).permitAll()
+                        )
+                        .permitAll()
 
 
 
 
-                        // ADMIN ACCESS
 
+                        // ADMIN ONLY
                         .requestMatchers(
-                                "/products/new",
-                                "/products/save",
-                                "/products/edit/**",
-                                "/products/delete/**",
-                                "/categories/**",
+
                                 "/admin/**"
 
-                        ).hasRole("ADMIN")
+                        )
+                        .hasRole("ADMIN")
 
 
 
@@ -110,14 +125,14 @@ public class SecurityConfig {
 
                         .requestMatchers(
 
-                                "/orders/**",
+                                "/products/**",
                                 "/cart/**",
                                 "/wishlist/**",
-                                "/profile/**",
-                                "/products",
-                                "/products/**"
+                                "/orders/**",
+                                "/profile/**"
 
-                        ).hasAnyRole(
+                        )
+                        .hasAnyRole(
                                 "USER",
                                 "ADMIN"
                         )
@@ -126,7 +141,8 @@ public class SecurityConfig {
 
 
 
-                        .anyRequest().authenticated()
+                        .anyRequest()
+                        .authenticated()
 
 
 
@@ -137,22 +153,27 @@ public class SecurityConfig {
 
                 .formLogin(login -> login
 
+
                         .loginPage("/login")
 
                         .successHandler(loginSuccessHandler)
 
                         .permitAll()
 
+
                 )
+
 
 
 
 
                 .logout(logout -> logout
 
+
                         .logoutSuccessUrl("/login?logout")
 
                         .permitAll()
+
 
                 );
 
@@ -161,5 +182,6 @@ public class SecurityConfig {
         return http.build();
 
     }
+
 
 }
