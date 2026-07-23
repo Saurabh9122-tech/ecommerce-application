@@ -35,7 +35,10 @@ public class Order {
     private String status = "PENDING";
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(
+            name = "product_id",
+            nullable = true
+    )
     private Product product;
 
     @OneToOne(cascade = CascadeType.ALL)

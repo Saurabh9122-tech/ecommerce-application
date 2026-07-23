@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
+import java.util.List;
+import java.util.ArrayList;
 @Entity
 @Table(name = "products")
 @Data
@@ -25,6 +26,12 @@ public class Product {
 
     @Min(value = 0, message = "Stock cannot be negative")
     private int stock;
+
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL
+    )
+    private List<Order> orders = new ArrayList<>();
 
     private String imageName;
 

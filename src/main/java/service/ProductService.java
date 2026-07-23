@@ -1,14 +1,14 @@
 package com.saurabh.ecommerce.service;
 
 import com.saurabh.ecommerce.entity.Product;
+import com.saurabh.ecommerce.repository.CartItemRepository;
+import com.saurabh.ecommerce.repository.OrderRepository;
 import com.saurabh.ecommerce.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,9 +19,17 @@ public class ProductService {
             LoggerFactory.getLogger(ProductService.class);
 
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
+    private final OrderRepository orderRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(
+            ProductRepository productRepository,
+            CartItemRepository cartItemRepository,
+            OrderRepository orderRepository) {
+
         this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
+        this.orderRepository = orderRepository;
     }
 
     // Get all products
@@ -46,11 +54,20 @@ public class ProductService {
     }
 
     // Delete product
+    @Transactional
     public void deleteProduct(Long id) {
 
-        logger.warn("Deleting product with id {}", id);
+        Product product = productRepository.findById(id)
+                .orElseThrow();
 
-        productRepository.deleteById(id);
+        // Delete cart references
+        cartItemRepository.deleteByProductId(id);
+
+        // Delete order references
+        orderRepository.deleteByProductId(id);
+
+        // Delete product
+        productRepository.delete(product);
     }
 
     // Search products
@@ -64,13 +81,12 @@ public class ProductService {
 
         return productRepository.findByNameContainingIgnoreCase(keyword);
     }
-    // Filter products by category
+
+    // Category filter
     public List<Product> getProductsByCategory(Long categoryId) {
-
-        logger.info("Fetching products for category id {}", categoryId);
-
         return productRepository.findByCategoryId(categoryId);
     }
+
     // Pagination
     public Page<Product> getProductsByPage(int page) {
 
@@ -100,7 +116,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    // Total products
+    // Dashboard
     public long getProductCount() {
         return productRepository.count();
     }
