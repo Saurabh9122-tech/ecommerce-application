@@ -66,11 +66,23 @@ public class AdminProductController {
 
         try {
 
+            // Keep old image while editing
+            if (product.getId() != null && image.isEmpty()) {
+
+                Product oldProduct =
+                        productService.getProductById(product.getId());
+
+                if (oldProduct != null) {
+                    product.setImageName(oldProduct.getImageName());
+                }
+
+            }
+
+            // Upload new image
             if (!image.isEmpty()) {
 
                 String uploadDir =
-                        System.getProperty("user.dir")
-                                + "/uploads/products/";
+                        System.getProperty("user.dir") + "/uploads/products";
 
                 Path uploadPath = Paths.get(uploadDir);
 
@@ -79,8 +91,7 @@ public class AdminProductController {
                 }
 
                 String fileName =
-                        System.currentTimeMillis()
-                                + "_"
+                        System.currentTimeMillis() + "_"
                                 + image.getOriginalFilename();
 
                 Files.copy(
@@ -93,7 +104,6 @@ public class AdminProductController {
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -101,7 +111,6 @@ public class AdminProductController {
 
         return "redirect:/admin/products";
     }
-
     @GetMapping("/edit/{id}")
     public String editProduct(@PathVariable Long id,
                               Model model) {
