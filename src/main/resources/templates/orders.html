@@ -55,11 +55,14 @@
 
         .product-img{
 
-            width:130px;
-            height:130px;
-            object-fit:contain;
+            width:140px;
+            height:140px;
+            object-fit:cover;
+            object-position:center;
             border-radius:15px;
-            background:#f8f9fa;
+            border:1px solid #dee2e6;
+            background:#fff;
+            box-shadow:0 4px 12px rgba(0,0,0,.12);
 
         }
 
@@ -235,9 +238,15 @@
                 <div class="col-md-2 text-center">
 
 
-                    <img th:if="${order.product != null}"
-                         th:src="@{'/uploads/'+${order.product.imageName}}"
-                         class="product-img">
+                    <img th:if="${order.product != null and order.product.imageName != null}"
+                         th:src="@{'/uploads/products/' + ${order.product.imageName}}"
+                         class="product-img"
+                         alt="Product Image">
+
+                    <img th:if="${order.product == null or order.product.imageName == null}"
+                         src="/images/no-image.png"
+                         class="product-img"
+                         alt="No Image">
 
 
                 </div>

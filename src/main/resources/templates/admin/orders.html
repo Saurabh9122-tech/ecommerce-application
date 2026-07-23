@@ -1,123 +1,554 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Manage Orders</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          rel="stylesheet">
+
+
+    <style>
+
+        body{
+            background:#f4f6f9;
+        }
+
+
+        .header{
+
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            color:white;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+        }
+
+
+        .order-card{
+
+            border:none;
+            border-radius:20px;
+            box-shadow:0 5px 20px rgba(0,0,0,.1);
+            transition:.3s;
+
+        }
+
+
+        .order-card:hover{
+
+            transform:translateY(-5px);
+
+        }
+
+
+
+        .product-img{
+
+            width:140px;
+            height:140px;
+            object-fit:contain;
+            object-position:center;
+            padding:10px;
+            border-radius:15px;
+            border:1px solid #dee2e6;
+            background:#fff;
+            box-shadow:0 4px 12px rgba(0,0,0,.12);
+            transition:.3s ease;
+
+        }
+
+        .product-img:hover{
+
+            transform:scale(1.05);
+            box-shadow:0 8px 20px rgba(0,0,0,.18);
+
+        }
+
+
+        .price{
+
+            font-size:24px;
+            font-weight:bold;
+            color:#198754;
+
+        }
+
+
+
+        .badge-status{
+
+            padding:8px 15px;
+            border-radius:30px;
+            font-weight:bold;
+
+        }
+
+
+        .PENDING{
+
+            background:#fff3cd;
+            color:#856404;
+
+        }
+
+
+        .PROCESSING{
+
+            background:#cff4fc;
+            color:#055160;
+
+        }
+
+
+        .SHIPPED{
+
+            background:#cfe2ff;
+            color:#084298;
+
+        }
+
+
+        .DELIVERED{
+
+            background:#198754;
+            color:white;
+
+        }
+
+
+        .CANCELLED{
+
+            background:#dc3545;
+            color:white;
+
+        }
+
+
+        .info-box{
+
+            background:#f8f9fa;
+            border-radius:12px;
+            padding:10px;
+
+        }
+
+
+    </style>
+
+</head>
+
 
 
 <body>
 
 
-<div class="container">
-
-
-    <h2>
-        Manage Orders
-    </h2>
+<div class="container mt-5">
 
 
 
-    <table class="table">
+    <div class="header mb-4">
 
 
-        <tr>
-
-            <th>ID</th>
-
-            <th>Email</th>
-
-            <th>Total</th>
-
-            <th>Status</th>
-
-            <th>Update</th>
+        <div class="d-flex justify-content-between align-items-center">
 
 
-        </tr>
+            <div>
+
+                <h2>
+
+                    <i class="bi bi-cart-check"></i>
+
+                    Manage Orders
+
+                </h2>
+
+
+                <p class="mb-0">
+                    Customer orders, products and payments
+                </p>
+
+
+            </div>
 
 
 
-        <tr th:each="order:${orders}">
+            <a href="/admin/dashboard"
+               class="btn btn-light">
+
+                <i class="bi bi-speedometer2"></i>
+
+                Dashboard
+
+            </a>
 
 
-            <td th:text="${order.id}">
-            </td>
+
+        </div>
 
 
-            <td th:text="${order.email}">
-            </td>
+    </div>
 
 
-            <td>
-                ₹ <span th:text="${order.totalAmount}"></span>
-            </td>
 
 
-            <td>
-
-                <form th:action="@{/admin/orders/status/{id}(id=${order.id})}"
-                      method="post">
 
 
-                    <select name="status"
-                            class="form-select">
+    <div th:if="${orders.isEmpty()}"
+         class="text-center mt-5">
 
 
-                        <option value="PENDING"
-                                th:selected="${order.status == 'PENDING'}">
-                            PENDING
-                        </option>
+        <i class="bi bi-cart-x display-1 text-secondary"></i>
 
 
-                        <option value="PROCESSING"
-                                th:selected="${order.status == 'PROCESSING'}">
-                            PROCESSING
-                        </option>
+        <h3>
+            No Orders Found
+        </h3>
 
 
-                        <option value="SHIPPED"
-                                th:selected="${order.status == 'SHIPPED'}">
-                            SHIPPED
-                        </option>
+    </div>
 
 
-                        <option value="DELIVERED"
-                                th:selected="${order.status == 'DELIVERED'}">
-                            DELIVERED
-                        </option>
 
 
-                        <option value="CANCELLED"
-                                th:selected="${order.status == 'CANCELLED'}">
-                            CANCELLED
-                        </option>
 
 
-                    </select>
+
+    <div th:each="order:${orders}"
+         class="card order-card mb-4">
 
 
-                    <button type="submit"
-                            class="btn btn-primary mt-2">
 
-                        Update
-
-                    </button>
+        <div class="card-body">
 
 
-                </form>
+
+            <div class="row align-items-center">
 
 
-            </td>
 
 
-        </tr>
+
+                <!-- IMAGE -->
+
+                <div class="col-md-2 text-center">
+
+                    <div class="bg-white border rounded-4 p-2 shadow-sm">
+
+                        <img th:if="${order.product != null and order.product.imageName != null}"
+                             th:src="@{'/uploads/products/' + ${order.product.imageName}}"
+                             class="product-img img-fluid"
+                             alt="Product Image">
+
+                        <img th:if="${order.product == null or order.product.imageName == null}"
+                             src="/images/no-image.png"
+                             class="product-img img-fluid"
+                             alt="No Image">
+
+                    </div>
+
+                </div>
 
 
-    </table>
+
+
+
+
+
+
+                <!-- PRODUCT + CUSTOMER -->
+
+                <div class="col-md-4">
+
+
+                    <h5 class="fw-bold">
+
+                        <i class="bi bi-box"></i>
+
+                        <span th:text="${order.product != null ? order.product.name : 'Product Removed'}">
+
+</span>
+
+
+                    </h5>
+
+
+
+                    <div class="info-box">
+
+
+                        <p class="mb-1">
+
+                            <b>Order ID:</b>
+
+                            <span th:text="${order.id}"></span>
+
+                        </p>
+
+
+
+                        <p class="mb-1">
+
+                            <b>Customer:</b>
+
+                            <span th:text="${order.customerName}"></span>
+
+                        </p>
+
+
+
+                        <p class="mb-1">
+
+                            <b>Email:</b>
+
+                            <span th:text="${order.email}"></span>
+
+                        </p>
+
+
+
+                        <p class="mb-1">
+
+                            <b>Address:</b>
+
+                            <span th:text="${order.address}"></span>
+
+                        </p>
+
+
+
+                        <p th:if="${order.orderDate != null}"
+                           class="mb-0">
+
+
+                            <b>Date:</b>
+
+                            <span th:text="${#temporals.format(order.orderDate,'dd MMM yyyy')}"></span>
+
+
+                        </p>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <!-- PAYMENT -->
+
+                <div class="col-md-2">
+
+
+                    <h6>
+
+                        <i class="bi bi-credit-card"></i>
+
+                        Payment
+
+                    </h6>
+
+
+
+                    <span th:if="${order.payment != null}"
+
+                          class="badge bg-success">
+
+
+<i class="bi bi-check-circle"></i>
+
+
+<span th:text="${order.payment.paymentStatus}"></span>
+
+
+</span>
+
+
+
+                    <span th:if="${order.payment == null and order.paymentStatus != null}"
+
+                          class="badge bg-success">
+
+
+<span th:text="${order.paymentStatus}"></span>
+
+
+</span>
+
+
+
+                    <span th:if="${order.payment == null and order.paymentStatus == null}"
+
+                          class="badge bg-danger">
+
+NOT PAID
+
+</span>
+
+
+
+
+                    <p th:if="${order.payment != null}">
+
+                        Method:
+
+                        <b th:text="${order.payment.paymentMethod}"></b>
+
+                    </p>
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <!-- TOTAL -->
+
+                <div class="col-md-2 text-center">
+
+
+                    <div class="price">
+
+                        ₹
+
+                        <span th:text="${order.totalAmount}"></span>
+
+                    </div>
+
+
+                    <small>
+                        Total Amount
+                    </small>
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <!-- STATUS -->
+
+                <div class="col-md-2">
+
+
+<span class="badge-status"
+      th:classappend="${order.status}"
+      th:text="${order.status}">
+
+</span>
+
+
+
+
+                    <form class="mt-3"
+
+                          th:action="@{/admin/orders/status/{id}(id=${order.id})}"
+
+                          method="post">
+
+
+
+                        <select name="status"
+                                class="form-select mb-2">
+
+
+                            <option value="PENDING"
+                                    th:selected="${order.status=='PENDING'}">
+
+                                PENDING
+
+                            </option>
+
+
+                            <option value="PROCESSING"
+                                    th:selected="${order.status=='PROCESSING'}">
+
+                                PROCESSING
+
+                            </option>
+
+
+                            <option value="SHIPPED"
+                                    th:selected="${order.status=='SHIPPED'}">
+
+                                SHIPPED
+
+                            </option>
+
+
+                            <option value="DELIVERED"
+                                    th:selected="${order.status=='DELIVERED'}">
+
+                                DELIVERED
+
+                            </option>
+
+
+                            <option value="CANCELLED"
+                                    th:selected="${order.status=='CANCELLED'}">
+
+                                CANCELLED
+
+                            </option>
+
+
+                        </select>
+
+
+
+                        <button class="btn btn-primary w-100">
+
+                            <i class="bi bi-arrow-repeat"></i>
+
+                            Update
+
+                        </button>
+
+
+
+                    </form>
+
+
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
 
 
 </div>
 
 
 </body>
-
 
 </html>
